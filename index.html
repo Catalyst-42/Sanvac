@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>September 17</title>
+  
+  <link rel="icon" href="./favicon.ico" sizes="any">
+  <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon">
+  <link rel="apple-touch-icon" href="./favicon.ico"> 
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400&family=Inter:wght@400;500;600&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+  <!-- Core -->
+  <div id="viewport">
+    <div id="world"></div>
+  </div>
+
+  <!-- HUD -->
+  <div id="hud" aria-hidden="true">
+    <span id="hud-x">0</span>, <span id="hud-y">0</span>
+  </div>
+
+  <!-- Confetti -->
+  <canvas id="confetti-canvas"></canvas>
+
+  <!-- Veil -->
+  <div id="intro-veil">
+    <p id="intro-text">Sanvac</p>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/state.js"></script>
+  <script src="js/dataLoader.js"></script>
+  <script src="js/objects.js"></script>
+  <script src="js/camera.js"></script>
+  <script src="js/interactions.js"></script>
+  <script src="js/keyboard.js"></script>
+  <script src="js/confetti.js"></script>
+  <script src="js/save.js"></script>
+  <script src="js/main.js"></script>
+</body>
+
+</html>

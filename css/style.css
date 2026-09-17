@@ -1,0 +1,279 @@
+:root {
+  --paper:        #EAE3D6;  /* Board background */
+  --paper-edge:   #DED5C3;  /* Subtle vignette edge */
+  --ink:          #2E2A22;  /* Hud/system text */
+  --ink-soft:     #6B6353;
+
+  --pine:         #4F6F64;  /* Accent 1 */
+  --plum:         #8B5D73;  /* Accent 2 */
+  --mustard:      #C98A2E;  /* Accent 3 */
+  --clay:         #B8654B;  /* Accent 4 */
+  --powder:       #6C86A0;  /* Accent 5 */
+
+  --note-paper:   #F3EEE2;
+  --shadow-soft:  0 6px 18px rgba(46, 42, 34, 0.16), 0 1px 3px rgba(46, 42, 34, 0.10);
+  --shadow-lift:  0 18px 40px rgba(46, 42, 34, 0.26), 0 4px 10px rgba(46, 42, 34, 0.14);
+
+  --font-hand:    'Caveat', cursive;
+  --font-serif:   'Fraunces', serif;
+  --font-system:  'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--paper);
+  font-family: var(--font-system);
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+#viewport {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  touch-action: none;
+  background:
+    radial-gradient(120% 120% at 50% 42%, var(--paper) 0%, var(--paper-edge) 100%);
+  cursor: grab;
+}
+
+#viewport.panning {
+  cursor: grabbing;
+}
+
+#world {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  transform-origin: 0 0;
+  will-change: transform;
+}
+
+/* Cards */
+.card {
+  position: absolute;
+  top: 0;
+  left: 0;
+  touch-action: none;
+  will-change: transform;
+  transform-origin: center center;
+  transition: box-shadow 0.15s ease;
+}
+
+.card.dragging {
+  transition: none;
+  cursor: grabbing;
+}
+
+/* Photo */
+.card-photo {
+  padding: 10px 10px 12px;
+  background: #fff;
+  border-radius: 3px;
+  box-shadow: var(--shadow-soft);
+  cursor: grab;
+}
+
+.card-photo.dragging {
+  box-shadow: var(--shadow-lift);
+}
+
+.card-photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #f4f2ee;
+  pointer-events: none;
+  -webkit-user-drag: none;
+}
+
+.card-photo .caption {
+  margin-top: 8px;
+  font-family: var(--font-hand);
+  font-size: 20px;
+  line-height: 1.1;
+  color: var(--ink-soft);
+  text-align: center;
+}
+
+/* Video */
+.card-video {
+  position: absolute;
+  padding: 10px 10px 12px;
+  background: #fff;
+  border-radius: 3px;
+  box-shadow: var(--shadow-soft);
+  cursor: grab;
+}
+.card-video.dragging { box-shadow: var(--shadow-lift); cursor: grabbing; }
+.card-video video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: #000;
+  /* Видео не перехватывает указатель само — весь клик/драг обрабатывает
+     родительская карточка (interactions.js), точно как у фото. Никаких
+     controls, play/pause здесь нет — видео просто играет само (autoplay). */
+  pointer-events: none;
+}
+.card-video .caption {
+  margin-top: 8px;
+  font-family: var(--font-hand);
+  font-size: 20px;
+  color: var(--ink-soft);
+  text-align: center;
+}
+/* Sticker */
+.card-sticker {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 14px 16px;
+  border-radius: 4px;
+  font-family: var(--font-hand);
+  font-weight: 700;
+  line-height: 1.15;
+  color: #fff;
+  box-shadow: var(--shadow-soft);
+  cursor: grab;
+}
+
+.card-sticker.dragging {
+  box-shadow: var(--shadow-lift);
+}
+
+.card-sticker::before {
+  /* Small folded corner */
+  content: '';
+  position: absolute;
+  top: -6px;
+  left: 50%;
+  width: 14px;
+  height: 14px;
+  margin-left: -7px;
+  background: rgba(0, 0, 0, 0.18);
+  border-radius: 50%;
+}
+
+/* Note */
+.card-note {
+  padding: 22px 24px;
+  background: var(--note-paper);
+  box-shadow: var(--shadow-soft);
+  border-radius: 2px;
+  font-family: var(--font-hand);
+  font-size: 22px;
+  line-height: 1.3;
+  color: var(--ink);
+  overflow: hidden;
+  cursor: grab;
+  background-image: repeating-linear-gradient(var(--note-paper) 0px, var(--note-paper) 33px,
+      rgba(46, 42, 34, 0.07) 34px);
+}
+
+.card-note.dragging {
+  box-shadow: var(--shadow-lift);
+}
+
+/* Hidden text layer */
+.card-text {
+  padding: 4px 8px;
+  background: none;
+  box-shadow: none;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  color: var(--ink);
+  opacity: 1;
+  white-space: pre-line;
+  text-align: center;
+  transition: opacity 0.4s ease;
+  cursor: grab;
+}
+
+.card-text:hover,
+.card-text.dragging {
+  opacity: 1;
+  transition: opacity 0.15s ease;
+}
+
+/* HUD */
+#hud {
+  position: fixed;
+  top: 18px;
+  left: 20px;
+  font-family: var(--font-system);
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+  color: var(--ink);
+  background: rgba(243, 238, 226, 0.85);
+  padding: 5px 10px;
+  border-radius: 3px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.12s ease;
+  z-index: 9999;
+}
+
+#hud.visible {
+  opacity: 1;
+}
+
+/* Confetti */
+#confetti-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 9998;
+}
+
+/* Intro veil */
+#intro-veil {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 4vh;
+  pointer-events: none;
+  z-index: 9997;
+  opacity: 1;
+  transition: opacity 1.4s ease 2.6s;
+}
+
+#intro-veil.hidden {
+  opacity: 0;
+}
+
+#intro-text {
+  margin: 0;
+  font-family: var(--font-system);
+  font-size: 13px;
+  letter-spacing: 0.03em;
+  line-height: 1.7;
+  text-align: center;
+  color: var(--ink-soft);
+}
+
+@media (max-width: 640px) {
+  #intro-text {
+    font-size: 12px;
+  }
+}
